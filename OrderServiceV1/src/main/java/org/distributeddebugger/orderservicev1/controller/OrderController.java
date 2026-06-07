@@ -1,6 +1,8 @@
 package org.distributeddebugger.orderservicev1.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.distributeddebugger.orderservicev1.api.OrderApi;
 import org.distributeddebugger.orderservicev1.dto.CreateOrderResponse;
 import org.distributeddebugger.orderservicev1.dto.OrderRequest;
 import org.distributeddebugger.orderservicev1.service.OrderServiceImpl;
@@ -14,7 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/orders")
-public class OrderController {
+@Tag(name = "Orders", description = "Operations for creating customer orders")
+public class OrderController implements OrderApi {
 
 
     private final OrderServiceImpl orderService;
@@ -24,7 +27,8 @@ public class OrderController {
        this.orderService = orderService;
    }
 
-   @PostMapping()
+   @Override
+   @PostMapping
    public ResponseEntity<CreateOrderResponse> createOrder(@Valid @RequestBody OrderRequest request){
 
        CreateOrderResponse orderResponse = orderService.createOrder(request);

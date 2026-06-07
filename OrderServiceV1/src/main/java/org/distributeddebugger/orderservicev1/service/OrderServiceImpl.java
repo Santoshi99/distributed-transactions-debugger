@@ -25,7 +25,7 @@ public class OrderServiceImpl {
 
     public CreateOrderResponse createOrder(@Valid OrderRequest request) {
 
-        Long orderId = Long.parseLong(UUID.randomUUID().toString());
+        String orderId = UUID.randomUUID().toString();
         String correlationId = "corel-" + UUID.randomUUID();
         List<OrderItem> itemsList = request.items().stream().map(item -> {
             OrderItem orderItem = new OrderItem();
@@ -40,8 +40,10 @@ public class OrderServiceImpl {
                 .customerId(request.customerId())
                 .orderId(orderId)
                 .correlationId(correlationId)
+                .status("PENDING")
                 .build();
 
+        itemsList.forEach(orderItem -> orderItem.setOrder(order));
         orderRepository.save(order);
         return new CreateOrderResponse("Order successfully created", "ORDER_CREATED", order.getOrderId(), order.getCorrelationId(), order.getStatus());
     }
