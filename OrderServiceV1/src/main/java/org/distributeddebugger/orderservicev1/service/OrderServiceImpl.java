@@ -26,7 +26,7 @@ public class OrderServiceImpl {
     public CreateOrderResponse createOrder(@Valid OrderRequest request) {
 
         String orderId = UUID.randomUUID().toString();
-        String correlationId = "corel-" + UUID.randomUUID();
+        String correlationId = "co-" + UUID.randomUUID();
         List<OrderItem> itemsList = request.items().stream().map(item -> {
             OrderItem orderItem = new OrderItem();
             orderItem.setProductId(item.productId());
