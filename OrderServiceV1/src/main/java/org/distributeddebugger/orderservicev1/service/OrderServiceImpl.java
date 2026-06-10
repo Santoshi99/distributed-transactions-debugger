@@ -5,6 +5,8 @@ import org.distributeddebugger.orderservicev1.dto.CreateOrderResponse;
 import org.distributeddebugger.orderservicev1.dto.OrderRequest;
 import org.distributeddebugger.orderservicev1.entity.Order;
 import org.distributeddebugger.orderservicev1.entity.OrderItem;
+import org.distributeddebugger.orderservicev1.event.OrderCreatedEvent;
+import org.distributeddebugger.orderservicev1.producer.OrderCreatedProducer;
 import org.distributeddebugger.orderservicev1.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,10 +19,12 @@ import java.util.UUID;
 public class OrderServiceImpl {
 
     private final OrderRepository orderRepository;
+    private final OrderCreatedProducer orderCreatedProducer;
 
     @Autowired
-    public OrderServiceImpl(OrderRepository orderRepository){
+    public OrderServiceImpl(OrderRepository orderRepository, OrderCreatedProducer orderCreatedProducer){
         this.orderRepository = orderRepository;
+        this.orderCreatedProducer = orderCreatedProducer;
     }
 
     public CreateOrderResponse createOrder(@Valid OrderRequest request) {
@@ -45,6 +49,18 @@ public class OrderServiceImpl {
 
         itemsList.forEach(orderItem -> orderItem.setOrder(order));
         orderRepository.save(order);
+
+        OrderCreatedEvent orderCreatedEvent = new OrderCreatedEvent(
+                "EVT-" + UUID.randomUUID(),
+                order.getCorrelationId(),
+                order.getOrderId(),
+                "ORDER_SERVICE",
+                "ORDER_CREATED",
+                "SUCCESS",
+                LocalDateTime.now()
+        );
+        orderCreatedProducer.publishOrderCreatedEvent(orderCreatedEvent);
+
         return new CreateOrderResponse("Order successfully created", "ORDER_CREATED", order.getOrderId(), order.getCorrelationId(), order.getStatus());
     }
 }

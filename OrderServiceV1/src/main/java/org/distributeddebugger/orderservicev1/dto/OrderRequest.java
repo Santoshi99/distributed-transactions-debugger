@@ -2,6 +2,7 @@ package org.distributeddebugger.orderservicev1.dto;
 
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -21,7 +22,7 @@ public record OrderRequest(
                 schema = @Schema(implementation = OrderItemRequest.class),
                 minItems = 1
         )
-        List<OrderItemRequest> items,
+        List<@Valid OrderItemRequest> items,
 
         @NotNull(message = "Amount is required")
         @DecimalMin(value = "1.00", message = "Amount must be at least 1.00")
