@@ -12,6 +12,19 @@ services:
     volumes:
       - order_service_mysql_data:/var/lib/mysql
 
+  debugger-service-mysql:
+    image: mysql:8.4
+    container_name: debugger-service-mysql
+    environment:
+      MYSQL_DATABASE: debuggerdb
+      MYSQL_USER: myuser
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: verysecret
+    ports:
+      - "3307:3306"
+    volumes:
+      - debugger_service_mysql_data:/var/lib/mysql
+
   kafka:
     image: apache/kafka:4.1.2
     container_name: local-kafka
@@ -32,3 +45,4 @@ services:
 
 volumes:
   order_service_mysql_data:
+  debugger_service_mysql_data:
