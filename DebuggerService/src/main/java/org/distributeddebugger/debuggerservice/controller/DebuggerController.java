@@ -1,5 +1,6 @@
 package org.distributeddebugger.debuggerservice.controller;
 
+import org.distributeddebugger.debuggerservice.api.DebuggerApi;
 import org.distributeddebugger.debuggerservice.dto.TransactionDetailsResponse;
 import org.distributeddebugger.debuggerservice.service.DebuggerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/transactions")
-public class DebuggerController {
+public class DebuggerController implements DebuggerApi {
 
     private final DebuggerService debuggerService;
 
@@ -21,6 +22,7 @@ public class DebuggerController {
         this.debuggerService = debuggerService;
     }
 
+    @Override
     @GetMapping("/{correlationId}")
     public ResponseEntity<TransactionDetailsResponse> getTransactions(@PathVariable String correlationId){
         TransactionDetailsResponse response = debuggerService.getTransactions(correlationId);

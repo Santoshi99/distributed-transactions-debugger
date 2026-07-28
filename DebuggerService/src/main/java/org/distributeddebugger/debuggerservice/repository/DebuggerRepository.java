@@ -10,7 +10,7 @@ public interface DebuggerRepository extends JpaRepository<Transaction, Long> {
     public Transaction findByEventId(String eventId);
 
     @Query("""
-            SELECT new TransactionDetailsResponse(
+            SELECT new org.distributeddebugger.debuggerservice.dto.TransactionDetailsResponse(
                 t.eventId,
                 t.correlationId,
                 t.serviceName,
