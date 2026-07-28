@@ -2,6 +2,7 @@ package org.distributeddebugger.orderservicev1;
 
 import org.distributeddebugger.orderservicev1.entity.Order;
 import org.distributeddebugger.orderservicev1.entity.OrderItem;
+import org.distributeddebugger.orderservicev1.producer.OrderCreatedProducer;
 import org.distributeddebugger.orderservicev1.repository.OrderRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -29,6 +31,9 @@ class OrderControllerIntegrationTests {
 
     @Autowired
     private OrderRepository orderRepository;
+
+    @MockitoBean
+    private OrderCreatedProducer orderCreatedProducer;
 
     @BeforeEach
     void cleanDatabase() {
