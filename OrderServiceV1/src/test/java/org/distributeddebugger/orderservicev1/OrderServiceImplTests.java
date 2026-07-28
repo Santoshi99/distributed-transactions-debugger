@@ -4,6 +4,8 @@ import org.distributeddebugger.orderservicev1.dto.CreateOrderResponse;
 import org.distributeddebugger.orderservicev1.dto.OrderItemRequest;
 import org.distributeddebugger.orderservicev1.dto.OrderRequest;
 import org.distributeddebugger.orderservicev1.entity.Order;
+import org.distributeddebugger.orderservicev1.event.OrderCreatedEvent;
+import org.distributeddebugger.orderservicev1.producer.OrderCreatedProducer;
 import org.distributeddebugger.orderservicev1.repository.OrderRepository;
 import org.distributeddebugger.orderservicev1.service.OrderServiceImpl;
 import org.junit.jupiter.api.Test;
@@ -26,6 +28,9 @@ class OrderServiceImplTests {
     @Mock
     private OrderRepository orderRepository;
 
+    @Mock
+    private OrderCreatedProducer orderCreatedProducer;
+
     @InjectMocks
     private OrderServiceImpl orderService;
 
@@ -44,6 +49,7 @@ class OrderServiceImplTests {
 
         ArgumentCaptor<Order> orderCaptor = ArgumentCaptor.forClass(Order.class);
         verify(orderRepository).save(orderCaptor.capture());
+        verify(orderCreatedProducer).publishOrderCreatedEvent(org.mockito.ArgumentMatchers.any(OrderCreatedEvent.class));
 
         Order savedOrder = orderCaptor.getValue();
         assertThat(savedOrder.getCustomerId()).isEqualTo("customer-123");
